@@ -28,7 +28,7 @@ class Atranslate(object):
  		self.terminology = terminology
  		self.translate = boto3.client('translate')
  		self.codes = ['zh-TW']
- 		logging.basicConfig(filename='logs/hol-2003-01-net_xml_en.log',
+ 		logging.basicConfig(filename='logs/all_logs.log',
                     filemode='a', format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s', level=logging.INFO, datefmt='%H:%M:%S')
  		self.logger = logging.getLogger('Translation')
  		if dst_lang not in self.codes:
@@ -87,11 +87,11 @@ class Atranslate(object):
  		translate = boto3.client('translate')
  		source_language = "en"
  		total_char = 0
- 		print("Translating lab manual hol-2003-01-net_xml_en")
+ 		print("Translating lab manual")
  		for target_language_code in self.codes:
  			print("Translating content from {}  to {}".format(
  			    source_language, target_language_code))
- 			with open(self.src_dir + '/hol-2003-01-net_xml_en/content.xml') as f:
+ 			with open(self.src_dir + '/dir_name/content.xml') as f:
  				tree = ET.parse(f)
  				root = tree.getroot()
  				len_of_text = 0
@@ -119,8 +119,8 @@ class Atranslate(object):
  					self.logger.info("-----------------------translation complete-----------------------------")
  					self.logger.info("---------------------End of text----------------------------------")
  					self.logger.info("")   
- 			os.mkdir(self.dst_dir + '/hol-2003-01-net_xml_' + target_language_code)
- 			tree.write(self.dst_dir + '/hol-2003-01-net_xml_'+target_language_code+'/content.xml', encoding= "UTF-8")
+ 			os.mkdir(self.dst_dir + '/lab_name' + target_language_code)
+ 			tree.write(self.dst_dir + '/lab_name'+target_language_code+'/content.xml', encoding= "UTF-8")
  			end_time = time.time()
  			print("Total elapsed time to translate the xml document in minute is", (end_time-start_time)/60)
  		final_end_time = time.time()
