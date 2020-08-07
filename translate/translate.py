@@ -37,12 +37,10 @@ class Translate(object):
  		self.translate = translatev2.Client()
  		# self.codes = ['es']
  		self.codes = ['de','es','fr','it','ja','ko','pt','ru','zh','zh-TW']
- 		# self.codes = ['zh','zh-TW']
  		self.client = translate.TranslationServiceClient()
- 		self.project_id = '473378358434'
- 		# text = 'YOUR_SOURCE_CONTENT'
+ 		self.project_id = 'your_project_id'
  		self.location = 'us-central1'
- 		self.model = 'projects/473378358434/locations/us-central1/models/TRL8487211618663399424'
+ 		self.model = 'your model'
  		self.parent = self.client.location_path(self.project_id, self.location)
  		self.download_s3(self.src_dir, self.bucket_name)
  		logging.basicConfig(filename='logs/all_logs.log',
@@ -62,11 +60,7 @@ class Translate(object):
 
  	def upload_s3(self, filename, dst_dir, bucket_name, lab_name, file_language_name):
  		print("Uploading the converted documents to s3 bucket {}".format(bucket_name))
- 		# print(self.dst_dir+'/'+file_language_name)
  		shutil.make_archive(self.dst_dir+'/'+file_language_name, 'zip', self.dst_dir+'/'+file_language_name)
- 		# os.remove(self.dst_dir+'/'+file_language_name)
- 		# print("aws s3 cp " + src_dir + " s3://"+ bucket_name + "/"+ dst_dir +"/"+ lab_name  + " --quiet --recursive")
- 		# command = "aws s3 cp " + src_dir + " s3://"+ bucket_name + "/"+ dst_dir +"/"+ lab_name + "/" + file_language_name + ".zip" + " --quiet --recursive"
  		return self.upload_file(filename, bucket_name)
 
 
@@ -76,7 +70,6 @@ class Translate(object):
  		s3 = boto3.client("s3")
  		res = boto3.resource('s3')
  		all_objects = s3.list_objects(Bucket = bucket_name) 
- 		# all_objects['Contents']
  		for k in all_objects['Contents']:
  			if re.search('^source/hol', k['Key']):
  				file_name = k['Key'].split('/')[-1]
@@ -96,7 +89,6 @@ class Translate(object):
 
 
  	def language_translation(self, text, source_language, target_language, model):
- 		# print("transafjsflsjgl", text) 
  		if isinstance(text, six.binary_type):
  			text = text.decode('utf-8')
  		if model == 'default':
@@ -119,7 +111,6 @@ class Translate(object):
 
  	def main(self):
  		begin = time.time()
- 		# translate = boto3.client('translate')
  		source_language = "en"
  		total_char = 0
  		labs = [ f.path for f in os.scandir(self.src_dir) if f.is_dir()]
@@ -147,7 +138,7 @@ class Translate(object):
 	 					    "-----------------------translating text-----------------------------")
 	 					curr_len = len(text_translate.encode('utf-8'))
 	 					total_char += curr_len
-	 					# self.logger.info("current frame size", str(curr_len))
+	 					
 	 					if tag == 'name' or tag== 'dataFormat':
 	 						continue
 	 					if tag == 'defaultLanguageCode':
@@ -155,7 +146,7 @@ class Translate(object):
 	 						continue
 	 					result = self.language_translation( text=
 							    text_translate,  source_language="en", target_language=target_language_code, model= self.modelType)
-	 					# print(result['translatedText'])
+	 					
 	 					if self.modelType == 'custom':
 	 						self.logger.info(result)
 	 						elem.text = str(result)
@@ -163,11 +154,11 @@ class Translate(object):
 	 						self.logger.info(result['translatedText'])
 	 						elem.text = str(result['translatedText'])
 	 					len_of_text += curr_len
-	 					# self.logger.info("Length so far.....", len_of_text)
+	 					
 	 					self.logger.info("-----------------------translation complete-----------------------------")
 	 					self.logger.info("---------------------End of text----------------------------------")
 	 					self.logger.info("")   
-	 			# os.mkdir(self.dst_dir + '/' + str(lab[7:-2]) + target_language_code)
+	 			
 	 			if not os.path.isdir(self.dst_dir + '/' + str(lab[7:-2]) + target_language_code):
 	 				os.mkdir(self.dst_dir + '/' + str(lab[7:-2]) + target_language_code)
 	 				os.mkdir(self.dst_dir + '/' + str(lab[7:-2]) + target_language_code + '/images')
@@ -200,8 +191,9 @@ if __name__ == "__main__":
                    required=False,
                    help='Please mention which model you want: (default/custom)')
 	args = parser.parse_args()
+	# set the bucket parameters
 	defaults = {
-	'bucket_name':"hol-gaurav",
+	'bucket_name':"you_bucket_name",
 	'src_dir':'source',
 	'dst_dir':'target'
 	}
@@ -209,7 +201,6 @@ if __name__ == "__main__":
 	if args.service == 'google':
 		trans  = Translate(bucket_name=defaults['bucket_name'], src_dir=defaults['src_dir'], dst_dir=defaults['dst_dir'], model = args.model)
 		trans.main()
-		# trans.upload_s3(src_dir=defaults['src_dir'], dst_dir=defaults['dst_dir'], bucket_name=defaults['bucket_name'], lab_name='hol-2044-01-ism_xml_all')
 	if args.service == 'amazon':
 		defaults = {
 		'src_dir':"source",
