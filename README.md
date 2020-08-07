@@ -8,7 +8,7 @@ This project serve as a sample application to translate xml text to any other fo
 
 This repository serves as an example application to convert the lab manuals from english to 10 foreign languages. Below is the high level architecture diagram:
 
-![image](./images/arch.png)
+![image](./images/arc.png)
 
 The xml file are taken from s3 bucket and the converted files are put back into the same s3 bucket, and the bucket parameters are configurable(we will see this later in this Post).On the left side of the diagram you can see that if we have vmware specific vocab dataset then we can feed this dataset to the AutoML of google translate service which can train the model on this dataset. The way AutoML works is it simply takes the input sentences in form of .tsv or .tmx files which contains source examples and target examples(or reference examples), the model then trains on that model. For reference please see the below diagram:
 
