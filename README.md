@@ -2,7 +2,6 @@
 
 This project serve as a sample application to translate xml text to any other foreign language using Google and Amazon translate service. If you have your own custom model built using google AutoML, the you can use that functionality as well with this code.
 
-[NOTE:] Please use google for translate. Do not use Amazon, since it is very slow in translations.
 
 #### Architecture:
 
